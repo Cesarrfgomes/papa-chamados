@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+enum Role {
+    USER
+    TECHNICIAN
+    ADMIN
+}
+
+enum Status {
+    NEW
+    ASSIGNED
+    INPROGRESS
+    WAITINGUSER
+    WAITINGVENDOR
+    RESOLVED
+    CLOSED
+}
+
+enum Priority {
+    LOW
+    MEDIUM
+    HIGh
+    CRITICAL
+}
+
+model Enterprise {
+    id        String  @id @default(uuid())
+    name      String
+    cgcent    String
+    latitude  Decimal
+    longitude Decimal
+
+    User   User[]
+    Ticket Ticket[]
+
+    @@map("enterprises")
+}
+
+model User {
+    id            String   @id @default(uuid())
+    enterprise_id String
+    name          String
+    username      String
+    email         String
+    password      String
+    phone         String
+    role          Role
+    isActive      Boolean
+    created_at    DateTime @default(now())
+
+    enterprise Enterprise @relation(fields: [enterprise_id], references: [id])
+    Ticket     Ticket[]
+
+    @@map("users")
+}
+
+model Category {
+    id     String   @id @default(uuid())
+    name   String
+    Ticket Ticket[]
+
+    @@map("categories")
+}
+
+model Ticket {
+    id            Int      @id @default(autoincrement())
+    user_id       String
+    enterprise_id String
+    category_id   String
+    title         String
+    description   String
+    priority      Priority
+    status        Status
+    created_at    DateTime @default(now())
+    updated_at    DateTime
+
+    enterprise Enterprise @relation(fields: [enterprise_id], references: [id])
+    user       User       @relation(fields: [user_id], references: [id])
+    category   Category   @relation(fields: [category_id], references: [id])
+
+    @@map("tickets")
+}
