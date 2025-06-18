@@ -55,10 +55,10 @@ model User {
     name          String
     username      String
     email         String
-    password      String
-    phone         String
-    role          Role
-    isActive      Boolean
+    password_hash String
+    phone         String?
+    role          Role     @default(USER)
+    isActive      Boolean  @default(true)
     created_at    DateTime @default(now())
 
     enterprise Enterprise @relation(fields: [enterprise_id], references: [id])
@@ -82,8 +82,8 @@ model Ticket {
     category_id   String
     title         String
     description   String
-    priority      Priority
-    status        Status
+    priority      Priority @default(LOW)
+    status        Status   @default(NEW)
     created_at    DateTime @default(now())
     updated_at    DateTime
 

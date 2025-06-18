@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE "tickets" ALTER COLUMN "priority" SET DEFAULT 'LOW',
+ALTER COLUMN "status" SET DEFAULT 'NEW';
+
+-- AlterTable
+ALTER TABLE "users" ALTER COLUMN "role" SET DEFAULT 'USER',
+ALTER COLUMN "isActive" SET DEFAULT true;
