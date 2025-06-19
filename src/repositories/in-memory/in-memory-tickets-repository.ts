@@ -5,6 +5,22 @@ import { TicketsRepository } from '../tickets-repository'
 export class InMemoryTicketRepository implements TicketsRepository {
 	public tickets: Ticket[] = []
 
+	async findTicketById(id: number): Promise<Ticket | null> {
+		const ticket = this.tickets.find(item => item.id === id)
+
+		if (!ticket) {
+			return null
+		}
+
+		return ticket
+	}
+
+	async findTicketByUserId(user_id: string): Promise<Ticket[]> {
+		const tickets = this.tickets.filter(item => item.user_id === user_id)
+
+		return tickets
+	}
+
 	async create(data: Prisma.TicketUncheckedCreateInput): Promise<Ticket> {
 		const ticket = {
 			id: randomInt(1, 20),
