@@ -25,6 +25,17 @@ export class InMemoryTicketRepository implements TicketsRepository {
 		return tickets
 	}
 
+	async findManyUserTicketsByStatus(
+		user_id: string,
+		status: string
+	): Promise<Ticket[]> {
+		const tickets = this.tickets.filter(
+			item => item.user_id === user_id && item.status === status
+		)
+
+		return tickets
+	}
+
 	async create(data: Prisma.TicketUncheckedCreateInput): Promise<Ticket> {
 		const ticket = {
 			id: this.tickets.length + 1,
@@ -35,6 +46,7 @@ export class InMemoryTicketRepository implements TicketsRepository {
 			user_id: data.user_id,
 			enterprise_id: data.enterprise_id,
 			category_id: data.category_id,
+			department_id: data.department_id,
 			created_at: new Date(),
 			updated_at: data.updated_at ? new Date(data.updated_at) : null
 		}

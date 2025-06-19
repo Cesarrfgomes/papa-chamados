@@ -1,14 +1,14 @@
 import { describe, expect, it, beforeEach } from 'vitest'
-import { InMemoryCategoryRepository } from '@/repositories/in-memory/in-memory-category-repository'
+import { InMemoryCategoriesRepository } from '@/repositories/in-memory/in-memory-category-repository'
 import { CreateCategoryUseCase } from './create-category'
 import { CategoryAlreadyExistsError } from './errors/category-already-exists-error'
 
-let categoryRepository: InMemoryCategoryRepository
+let categoryRepository: InMemoryCategoriesRepository
 let sut: CreateCategoryUseCase
 
 describe('Create Category', () => {
 	beforeEach(() => {
-		categoryRepository = new InMemoryCategoryRepository()
+		categoryRepository = new InMemoryCategoriesRepository()
 		sut = new CreateCategoryUseCase(categoryRepository)
 	})
 

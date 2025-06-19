@@ -4,6 +4,8 @@ import { NotFoundUserError } from './errors/user-not-found-error'
 import { EnterprisesRepository } from '@/repositories/enterprises-repository'
 import { NotFoundEnterpriseError } from './errors/enterprise-not-found-error'
 import { TicketsRepository } from '@/repositories/tickets-repository'
+import { CategoriesRepository } from '@/repositories/categories-repository'
+import { NotFoundCategoryError } from './errors/category-not-found-error'
 
 interface CreateTicketRequest {
 	title: string
@@ -12,6 +14,7 @@ interface CreateTicketRequest {
 	priority: Priority
 	enterprise_id: string
 	category_id: string
+	department_id: string
 }
 
 interface CreateTicketResponse {
@@ -22,7 +25,8 @@ export class CreateTicketUseCase {
 	constructor(
 		private readonly ticketsRepository: TicketsRepository,
 		private readonly usersRepository: UsersRepository,
-		private readonly enterprisesRepository: EnterprisesRepository
+		private readonly enterprisesRepository: EnterprisesRepository,
+		private readonly categoriesRepository: CategoriesRepository
 	) {}
 
 	async execute({
@@ -31,12 +35,17 @@ export class CreateTicketUseCase {
 		priority,
 		user_id,
 		category_id,
-		enterprise_id
+		enterprise_id,
+		department_id
 	}: CreateTicketRequest): Promise<CreateTicketResponse> {
 		const userExists = await this.usersRepository.findUserById(user_id)
 
 		const enterpriseExists =
 			await this.enterprisesRepository.findEnterpriseById(enterprise_id)
+
+		const categoryExists = await this.categoriesRepository.findCategoryById(
+			category_id
+		)
 
 		if (!userExists) {
 			throw new NotFoundUserError()
@@ -46,13 +55,18 @@ export class CreateTicketUseCase {
 			throw new NotFoundEnterpriseError()
 		}
 
+		if (!categoryExists) {
+			throw new NotFoundCategoryError()
+		}
+
 		const ticket = await this.ticketsRepository.create({
 			title,
 			description,
 			priority,
 			user_id,
 			category_id,
-			enterprise_id
+			enterprise_id,
+			department_id
 		})
 
 		return {

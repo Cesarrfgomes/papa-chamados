@@ -48,6 +48,7 @@ export class InMemoryUsersRepository implements UsersRepository {
 			password_hash: data.password_hash,
 			phone: data.phone ?? null,
 			enterprise_id: data.enterprise_id,
+			department_id: data.department_id,
 			role: data.role ?? 'USER',
 			isActive: data.isActive ?? true,
 			created_at: new Date()

@@ -75,8 +75,8 @@ describe('Fetch User tickets', () => {
 			})
 		}
 
-		const { tickets } = await sut.execute({ user_id: user.id, page: 1 })
+		const { tickets } = await sut.execute({ user_id: user.id, page: 2 })
 
-		expect(tickets).toHaveLength(20)
+		expect(tickets).toHaveLength(2)
 	})
 })

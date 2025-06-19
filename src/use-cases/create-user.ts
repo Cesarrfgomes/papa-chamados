@@ -10,6 +10,7 @@ interface CreateUserRequest {
 	email: string
 	password: string
 	enterprise_id: string
+	department_id: string
 }
 interface CreateUserResponse {
 	user: User
@@ -23,7 +24,8 @@ export class CreateUserUseCase {
 		username,
 		email,
 		password,
-		enterprise_id
+		enterprise_id,
+		department_id
 	}: CreateUserRequest): Promise<CreateUserResponse> {
 		const userWithSameEmail = await this.usersRepository.findUserByEmail(
 			email
@@ -47,7 +49,8 @@ export class CreateUserUseCase {
 			email,
 			enterprise_id,
 			username,
-			password_hash
+			password_hash,
+			department_id
 		})
 
 		return {

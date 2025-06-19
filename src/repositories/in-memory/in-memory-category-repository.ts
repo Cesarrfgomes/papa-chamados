@@ -2,7 +2,7 @@ import { Prisma, Category } from '@prisma/client'
 import { randomUUID } from 'node:crypto'
 import { CategoriesRepository } from '../categories-repository'
 
-export class InMemoryCategoryRepository implements CategoriesRepository {
+export class InMemoryCategoriesRepository implements CategoriesRepository {
 	public categories: Category[] = []
 
 	async findCategoryById(id: string): Promise<Category | null> {

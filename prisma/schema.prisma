@@ -52,6 +52,7 @@ model Enterprise {
 model User {
     id            String   @id @default(uuid())
     enterprise_id String
+    department_id String
     name          String
     username      String
     email         String
@@ -61,6 +62,7 @@ model User {
     isActive      Boolean  @default(true)
     created_at    DateTime @default(now())
 
+    department Department @relation(fields: [department_id], references: [id])
     enterprise Enterprise @relation(fields: [enterprise_id], references: [id])
     Ticket     Ticket[]
 
@@ -79,6 +81,7 @@ model Ticket {
     id            Int       @id @default(autoincrement())
     user_id       String
     enterprise_id String
+    department_id String
     category_id   String
     title         String
     description   String
@@ -90,6 +93,16 @@ model Ticket {
     enterprise Enterprise @relation(fields: [enterprise_id], references: [id])
     user       User       @relation(fields: [user_id], references: [id])
     category   Category   @relation(fields: [category_id], references: [id])
+    department Department @relation(fields: [department_id], references: [id])
 
     @@map("tickets")
+}
+
+model Department {
+    id     String   @id @default(uuid())
+    name   String
+    User   User[]
+    Ticket Ticket[]
+
+    @@map("departments")
 }

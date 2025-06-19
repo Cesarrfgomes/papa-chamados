@@ -19,6 +19,7 @@ describe('Create User', () => {
 			email: 'truvejano@minoxidil.com',
 			username: 'pmc.cesar',
 			password: '123456',
+			department_id: 'department-01',
 			enterprise_id: 'enterprise-01'
 		})
 
@@ -31,7 +32,8 @@ describe('Create User', () => {
 			email: 'truvejano@minoxidil.com',
 			username: 'pmc.cesar',
 			password: '123456',
-			enterprise_id: 'enterprise-01'
+			enterprise_id: 'enterprise-01',
+			department_id: 'department-01'
 		})
 
 		await expect(() =>
@@ -40,7 +42,8 @@ describe('Create User', () => {
 				email: 'truvejano@minoxidil.com',
 				username: 'pmc.cesar',
 				password: '123456',
-				enterprise_id: 'enterprise-01'
+				enterprise_id: 'enterprise-01',
+				department_id: 'department-01'
 			})
 		).rejects.instanceOf(EmailAlreadyExistsError)
 	})
@@ -51,7 +54,8 @@ describe('Create User', () => {
 			email: 'truvejano1@minoxidil.com',
 			username: 'pmc.cesar',
 			password: '123456',
-			enterprise_id: 'enterprise-01'
+			enterprise_id: 'enterprise-01',
+			department_id: 'department-01'
 		})
 
 		await expect(() =>
@@ -60,7 +64,8 @@ describe('Create User', () => {
 				email: 'truvejano@minoxidil.com',
 				username: 'pmc.cesar',
 				password: '123456',
-				enterprise_id: 'enterprise-01'
+				enterprise_id: 'enterprise-01',
+				department_id: 'department-01'
 			})
 		).rejects.instanceOf(UsernameAlreadyExistsError)
 	})

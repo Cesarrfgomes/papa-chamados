@@ -1,15 +1,18 @@
-import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
 import { describe, expect, it, beforeEach } from 'vitest'
-import { InMemoryTicketRepository } from '@/repositories/in-memory/in-memory-tickets-repository'
 import { CreateTicketUseCase } from './create-ticket'
+import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
+import { InMemoryTicketRepository } from '@/repositories/in-memory/in-memory-tickets-repository'
 import { InMemoryEnterpriseRepository } from '@/repositories/in-memory/in-memory-enterprises-repository'
-import { hash } from 'bcrypt'
+import { InMemoryCategoriesRepository } from '@/repositories/in-memory/in-memory-category-repository'
 import { NotFoundUserError } from './errors/user-not-found-error'
 import { NotFoundEnterpriseError } from './errors/enterprise-not-found-error'
+import { hash } from 'bcrypt'
+import { NotFoundCategoryError } from './errors/category-not-found-error'
 
 let ticketsRepository: InMemoryTicketRepository
 let usersRepository: InMemoryUsersRepository
 let enterprisesRepository: InMemoryEnterpriseRepository
+let categoriesRepository: InMemoryCategoriesRepository
 let sut: CreateTicketUseCase
 
 describe('Create Ticket', () => {
@@ -17,10 +20,12 @@ describe('Create Ticket', () => {
 		ticketsRepository = new InMemoryTicketRepository()
 		usersRepository = new InMemoryUsersRepository()
 		enterprisesRepository = new InMemoryEnterpriseRepository()
+		categoriesRepository = new InMemoryCategoriesRepository()
 		sut = new CreateTicketUseCase(
 			ticketsRepository,
 			usersRepository,
-			enterprisesRepository
+			enterprisesRepository,
+			categoriesRepository
 		)
 	})
 
@@ -37,14 +42,19 @@ describe('Create Ticket', () => {
 			email: 'truvejano@minoxidil.com',
 			username: 'pmc.cesar',
 			password_hash: await hash('123456', 6),
+			department_id: 'department-01',
 			enterprise_id: 'enterprise-01'
+		})
+
+		const category = await categoriesRepository.create({
+			name: 'Teste'
 		})
 
 		const { ticket } = await sut.execute({
 			title: 'Ticket teste',
 			description: 'Texto do ticket teste',
-			category_id: 'category-01',
 			priority: 'HIGH',
+			category_id: category.id,
 			enterprise_id: enterprise.id,
 			user_id: user.id
 		})
@@ -61,19 +71,15 @@ describe('Create Ticket', () => {
 			longitude: -38.9611181
 		})
 
-		const user = await usersRepository.create({
-			name: 'César',
-			email: 'truvejano@minoxidil.com',
-			username: 'pmc.cesar',
-			password_hash: await hash('123456', 6),
-			enterprise_id: 'enterprise-01'
+		const category = await categoriesRepository.create({
+			name: 'Teste'
 		})
 
 		await expect(() =>
 			sut.execute({
 				title: 'Ticket teste',
 				description: 'Texto do ticket teste',
-				category_id: 'category-01',
+				category_id: category.id,
 				priority: 'HIGH',
 				enterprise_id: enterprise.id,
 				user_id: 'user.id'
@@ -87,7 +93,41 @@ describe('Create Ticket', () => {
 			email: 'truvejano@minoxidil.com',
 			username: 'pmc.cesar',
 			password_hash: await hash('123456', 6),
+			department_id: 'department-01',
 			enterprise_id: 'enterprise-01'
+		})
+
+		const category = await categoriesRepository.create({
+			name: 'Teste'
+		})
+
+		await expect(() =>
+			sut.execute({
+				title: 'Ticket teste',
+				description: 'Texto do ticket teste',
+				category_id: category.id,
+				priority: 'HIGH',
+				enterprise_id: 'enterprise.id',
+				user_id: user.id
+			})
+		).rejects.instanceOf(NotFoundEnterpriseError)
+	})
+
+	it('should not be able to create a ticket with inexistent category', async () => {
+		const user = await usersRepository.create({
+			name: 'César',
+			email: 'truvejano@minoxidil.com',
+			username: 'pmc.cesar',
+			password_hash: await hash('123456', 6),
+			department_id: 'department-01',
+			enterprise_id: 'enterprise-01'
+		})
+
+		const enterprise = await enterprisesRepository.create({
+			name: 'Papa Materiais de Construção',
+			cgcent: '40.536.646/0001-10',
+			latitude: -12.2715191,
+			longitude: -38.9611181
 		})
 
 		await expect(() =>
@@ -96,9 +136,9 @@ describe('Create Ticket', () => {
 				description: 'Texto do ticket teste',
 				category_id: 'category-01',
 				priority: 'HIGH',
-				enterprise_id: 'enterprise.id',
+				enterprise_id: enterprise.id,
 				user_id: user.id
 			})
-		).rejects.instanceOf(NotFoundEnterpriseError)
+		).rejects.instanceOf(NotFoundCategoryError)
 	})
 })
