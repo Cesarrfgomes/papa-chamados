@@ -1,4 +1,4 @@
-import { Category, Department } from '@prisma/client'
+import { Department } from '@prisma/client'
 import { DepartmentRepository } from '@/repositories/department-repository'
 import { DepartmentAlreadyExistError } from './errors/department-already-exists-error'
 

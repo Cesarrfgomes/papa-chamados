@@ -16,7 +16,7 @@ export class InMemoryDepartmentsRepository implements DepartmentRepository {
 	}
 
 	async findDepartmentByName(name: string): Promise<Department | null> {
-		const department = this.departments.find(item => item.name == name)
+		const department = this.departments.find(item => item.name === name)
 
 		if (!department) {
 			return null
@@ -29,6 +29,8 @@ export class InMemoryDepartmentsRepository implements DepartmentRepository {
 			id: randomUUID(),
 			name: data.name
 		}
+
+		this.departments.push(department)
 
 		return department
 	}
