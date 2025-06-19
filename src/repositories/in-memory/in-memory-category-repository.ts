@@ -1,41 +1,28 @@
-import { Prisma, Enterprise } from '@prisma/client'
+import { Prisma, Category } from '@prisma/client'
 import { randomUUID } from 'node:crypto'
-import { EnterprisesRepository } from '../enterprises-repository'
+import { CategoriesRepository } from '../categories-repository'
 
-export class InMemoryEnterpriseRepository implements EnterprisesRepository {
-	public enterprises: Enterprise[] = []
+export class InMemoryCategoryRepository implements CategoriesRepository {
+	public categories: Category[] = []
 
-	async findEnterpriseById(id: string): Promise<Enterprise | null> {
-		const enterprise = this.enterprises.find(item => item.id === id)
+	async findCategoryById(id: string): Promise<Category | null> {
+		const category = this.categories.find(item => item.id === id)
 
-		if (!enterprise) {
+		if (!category) {
 			return null
 		}
 
-		return enterprise
+		return category
 	}
 
-	async findEnterpriseByCgcent(cgcent: string): Promise<Enterprise | null> {
-		const enterprise = this.enterprises.find(item => item.cgcent === cgcent)
-
-		if (!enterprise) {
-			return null
-		}
-
-		return enterprise
-	}
-
-	async create(data: Prisma.EnterpriseCreateInput): Promise<Enterprise> {
-		const enterprise = {
+	async create(data: Prisma.CategoryCreateInput): Promise<Category> {
+		const category = {
 			id: randomUUID(),
-			name: data.name,
-			cgcent: data.cgcent,
-			latitude: new Prisma.Decimal(data.latitude.toString()),
-			longitude: new Prisma.Decimal(data.longitude.toString())
+			name: data.name
 		}
 
-		this.enterprises.push(enterprise)
+		this.categories.push(category)
 
-		return enterprise
+		return category
 	}
 }

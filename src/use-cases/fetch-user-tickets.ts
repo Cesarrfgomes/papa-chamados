@@ -5,10 +5,11 @@ import { TicketsRepository } from '@/repositories/tickets-repository'
 
 interface FetchUserTicketsRequest {
 	user_id: string
+	page: number
 }
 
 interface FetchUserTicketsResponse {
-	ticket: Ticket[]
+	tickets: Ticket[]
 }
 
 export class FetchUserTicketsUseCase {
@@ -18,7 +19,8 @@ export class FetchUserTicketsUseCase {
 	) {}
 
 	async execute({
-		user_id
+		user_id,
+		page
 	}: FetchUserTicketsRequest): Promise<FetchUserTicketsResponse> {
 		const userExists = await this.usersRepository.findUserById(user_id)
 
@@ -26,10 +28,13 @@ export class FetchUserTicketsUseCase {
 			throw new NotFoundUserError()
 		}
 
-		const ticket = await this.ticketsRepository.findTicketByUserId(user_id)
+		const tickets = await this.ticketsRepository.findManyTicketsByUserId(
+			user_id,
+			page
+		)
 
 		return {
-			ticket
+			tickets
 		}
 	}
 }

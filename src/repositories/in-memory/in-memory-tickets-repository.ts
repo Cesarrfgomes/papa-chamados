@@ -15,8 +15,13 @@ export class InMemoryTicketRepository implements TicketsRepository {
 		return ticket
 	}
 
-	async findTicketByUserId(user_id: string): Promise<Ticket[]> {
-		const tickets = this.tickets.filter(item => item.user_id === user_id)
+	async findManyTicketsByUserId(
+		user_id: string,
+		page: number
+	): Promise<Ticket[]> {
+		const tickets = this.tickets
+			.filter(item => item.user_id === user_id)
+			.slice((page - 1) * 20, page * 20)
 
 		return tickets
 	}
