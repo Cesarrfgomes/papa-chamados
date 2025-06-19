@@ -5,6 +5,26 @@ import { EnterprisesRepository } from '../enterprises-repository'
 export class InMemoryEnterpriseRepository implements EnterprisesRepository {
 	public enterprises: Enterprise[] = []
 
+	async findEnterpriseById(id: string): Promise<Enterprise | null> {
+		const enterprise = this.enterprises.find(item => item.id === id)
+
+		if (!enterprise) {
+			return null
+		}
+
+		return enterprise
+	}
+
+	async findEnterpriseByCgcent(cgcent: string): Promise<Enterprise | null> {
+		const enterprise = this.enterprises.find(item => item.cgcent === cgcent)
+
+		if (!enterprise) {
+			return null
+		}
+
+		return enterprise
+	}
+
 	async create(data: Prisma.EnterpriseCreateInput): Promise<Enterprise> {
 		const enterprise = {
 			id: randomUUID(),
