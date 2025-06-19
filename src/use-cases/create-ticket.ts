@@ -6,6 +6,8 @@ import { NotFoundEnterpriseError } from './errors/enterprise-not-found-error'
 import { TicketsRepository } from '@/repositories/tickets-repository'
 import { CategoriesRepository } from '@/repositories/categories-repository'
 import { NotFoundCategoryError } from './errors/category-not-found-error'
+import { DepartmentRepository } from '@/repositories/department-repository'
+import { NotFoundDepartmentError } from './errors/department-not-found-error'
 
 interface CreateTicketRequest {
 	title: string
@@ -26,7 +28,8 @@ export class CreateTicketUseCase {
 		private readonly ticketsRepository: TicketsRepository,
 		private readonly usersRepository: UsersRepository,
 		private readonly enterprisesRepository: EnterprisesRepository,
-		private readonly categoriesRepository: CategoriesRepository
+		private readonly categoriesRepository: CategoriesRepository,
+		private readonly departmentRepository: DepartmentRepository
 	) {}
 
 	async execute({
@@ -47,6 +50,9 @@ export class CreateTicketUseCase {
 			category_id
 		)
 
+		const departmentExists =
+			await this.departmentRepository.findDepartmentById(department_id)
+
 		if (!userExists) {
 			throw new NotFoundUserError()
 		}
@@ -57,6 +63,10 @@ export class CreateTicketUseCase {
 
 		if (!categoryExists) {
 			throw new NotFoundCategoryError()
+		}
+
+		if (!departmentExists) {
+			throw new NotFoundDepartmentError()
 		}
 
 		const ticket = await this.ticketsRepository.create({
