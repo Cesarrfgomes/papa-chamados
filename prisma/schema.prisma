@@ -69,7 +69,7 @@ model User {
 
 model Category {
     id     String   @id @default(uuid())
-    name   String
+    name   String   @unique
     Ticket Ticket[]
 
     @@map("categories")

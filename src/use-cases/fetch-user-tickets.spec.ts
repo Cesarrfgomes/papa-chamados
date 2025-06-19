@@ -1,12 +1,9 @@
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
 import { describe, expect, it, beforeEach } from 'vitest'
-import { CreateUserUseCase } from './create-user'
-import { EmailAlreadyExistsError } from './errors/email-already-exists-error'
-import { UsernameAlreadyExistsError } from './errors/username-already-exists-error'
 import { InMemoryTicketRepository } from '@/repositories/in-memory/in-memory-tickets-repository'
 import { FetchUserTicketsUseCase } from './fetch-user-tickets'
 import { hash } from 'bcrypt'
-import { InMemoryEnterpriseRepository } from '@/repositories/in-memory/in-memory-category-repository'
+import { InMemoryEnterpriseRepository } from '@/repositories/in-memory/in-memory-enterprises-repository'
 
 let ticketsRepository: InMemoryTicketRepository
 let usersRepository: InMemoryUsersRepository
@@ -78,8 +75,8 @@ describe('Fetch User tickets', () => {
 			})
 		}
 
-		const { tickets } = await sut.execute({ user_id: user.id, page: 2 })
+		const { tickets } = await sut.execute({ user_id: user.id, page: 1 })
 
-		expect(tickets).toHaveLength(2)
+		expect(tickets).toHaveLength(20)
 	})
 })

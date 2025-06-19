@@ -1,5 +1,4 @@
 import { Prisma, Ticket } from '@prisma/client'
-import { randomInt } from 'node:crypto'
 import { TicketsRepository } from '../tickets-repository'
 
 export class InMemoryTicketRepository implements TicketsRepository {
@@ -28,7 +27,7 @@ export class InMemoryTicketRepository implements TicketsRepository {
 
 	async create(data: Prisma.TicketUncheckedCreateInput): Promise<Ticket> {
 		const ticket = {
-			id: randomInt(1, 20),
+			id: this.tickets.length + 1,
 			title: data.title,
 			description: data.description,
 			priority: data.priority ?? 'LOW',

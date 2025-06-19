@@ -49,8 +49,6 @@ describe('Create Ticket', () => {
 			user_id: user.id
 		})
 
-		console.log(ticket)
-
 		expect(ticket.id).toEqual(expect.any(Number))
 		expect(ticket.priority).toEqual('HIGH')
 	})

@@ -15,6 +15,16 @@ export class InMemoryCategoryRepository implements CategoriesRepository {
 		return category
 	}
 
+	async findCategoryByName(name: string): Promise<Category | null> {
+		const category = this.categories.find(item => item.name === name)
+
+		if (!category) {
+			return null
+		}
+
+		return category
+	}
+
 	async create(data: Prisma.CategoryCreateInput): Promise<Category> {
 		const category = {
 			id: randomUUID(),
