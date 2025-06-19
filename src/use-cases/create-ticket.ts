@@ -1,5 +1,5 @@
 import { UsersRepository } from '@/repositories/users-repository'
-import { Ticket } from '@prisma/client'
+import { Priority, Prisma, Ticket } from '@prisma/client'
 import { NotFoundUserError } from './errors/user-not-found-error'
 import { EnterprisesRepository } from '@/repositories/enterprises-repository'
 import { NotFoundEnterpriseError } from './errors/enterprise-not-found-error'
@@ -9,6 +9,7 @@ interface CreateTicketRequest {
 	title: string
 	description: string
 	user_id: string
+	priority: Priority
 	enterprise_id: string
 	category_id: string
 }
@@ -27,6 +28,7 @@ export class CreateTicketUseCase {
 	async execute({
 		title,
 		description,
+		priority,
 		user_id,
 		category_id,
 		enterprise_id
@@ -47,6 +49,7 @@ export class CreateTicketUseCase {
 		const ticket = await this.ticketsRepository.create({
 			title,
 			description,
+			priority,
 			user_id,
 			category_id,
 			enterprise_id
