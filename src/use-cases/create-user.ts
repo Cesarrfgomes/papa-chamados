@@ -3,6 +3,8 @@ import { User } from '@prisma/client'
 import { hash } from 'bcrypt'
 import { EmailAlreadyExistsError } from './errors/email-already-exists-error'
 import { UsernameAlreadyExistsError } from './errors/username-already-exists-error'
+import { DepartmentRepository } from '@/repositories/department-repository'
+import { NotFoundDepartmentError } from './errors/department-not-found-error'
 
 interface CreateUserRequest {
 	name: string
@@ -17,7 +19,10 @@ interface CreateUserResponse {
 }
 
 export class CreateUserUseCase {
-	constructor(private readonly usersRepository: UsersRepository) {}
+	constructor(
+		private readonly usersRepository: UsersRepository,
+		private readonly departmentsRepository: DepartmentRepository
+	) {}
 
 	async execute({
 		name,
@@ -27,6 +32,11 @@ export class CreateUserUseCase {
 		enterprise_id,
 		department_id
 	}: CreateUserRequest): Promise<CreateUserResponse> {
+		const departmentExists =
+			await this.departmentsRepository.findDepartmentById(department_id)
+
+		console.log(departmentExists)
+
 		const userWithSameEmail = await this.usersRepository.findUserByEmail(
 			email
 		)
@@ -40,6 +50,10 @@ export class CreateUserUseCase {
 
 		if (userWithSameUsername) {
 			throw new UsernameAlreadyExistsError()
+		}
+
+		if (!departmentExists) {
+			throw new NotFoundDepartmentError()
 		}
 
 		const password_hash = await hash(password, 6)

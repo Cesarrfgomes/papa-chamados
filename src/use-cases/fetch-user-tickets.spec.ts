@@ -4,10 +4,12 @@ import { InMemoryTicketRepository } from '@/repositories/in-memory/in-memory-tic
 import { FetchUserTicketsUseCase } from './fetch-user-tickets'
 import { hash } from 'bcrypt'
 import { InMemoryEnterpriseRepository } from '@/repositories/in-memory/in-memory-enterprises-repository'
+import { InMemoryDepartmentsRepository } from '@/repositories/in-memory/in-memory-department-repository'
 
 let ticketsRepository: InMemoryTicketRepository
 let usersRepository: InMemoryUsersRepository
 let enterprisesRepository: InMemoryEnterpriseRepository
+let departmentsRepository: InMemoryDepartmentsRepository
 let sut: FetchUserTicketsUseCase
 
 describe('Fetch User tickets', () => {
@@ -15,6 +17,7 @@ describe('Fetch User tickets', () => {
 		ticketsRepository = new InMemoryTicketRepository()
 		usersRepository = new InMemoryUsersRepository()
 		enterprisesRepository = new InMemoryEnterpriseRepository()
+		departmentsRepository = new InMemoryDepartmentsRepository()
 		sut = new FetchUserTicketsUseCase(ticketsRepository, usersRepository)
 	})
 
@@ -26,11 +29,16 @@ describe('Fetch User tickets', () => {
 			longitude: -38.9611181
 		})
 
+		const department = await departmentsRepository.create({
+			name: 'TI'
+		})
+
 		const user = await usersRepository.create({
 			name: 'César',
 			email: 'truvejano@minoxidil.com',
 			username: 'pmc.cesar',
 			password_hash: await hash('123456', 6),
+			department_id: department.id,
 			enterprise_id: enterprise.id
 		})
 
@@ -40,6 +48,7 @@ describe('Fetch User tickets', () => {
 			category_id: 'category-01',
 			priority: 'HIGH',
 			enterprise_id: enterprise.id,
+			department_id: department.id,
 			user_id: user.id
 		})
 
@@ -56,12 +65,17 @@ describe('Fetch User tickets', () => {
 			longitude: -38.9611181
 		})
 
+		const department = await departmentsRepository.create({
+			name: 'TI'
+		})
+
 		const user = await usersRepository.create({
 			name: 'César',
 			email: 'truvejano@minoxidil.com',
 			username: 'pmc.cesar',
 			password_hash: await hash('123456', 6),
-			enterprise_id: enterprise.id
+			enterprise_id: enterprise.id,
+			department_id: department.id
 		})
 
 		for (let i = 0; i < 22; i++) {
@@ -71,6 +85,7 @@ describe('Fetch User tickets', () => {
 				category_id: 'category-01',
 				priority: 'HIGH',
 				enterprise_id: enterprise.id,
+				department_id: department.id,
 				user_id: user.id
 			})
 		}

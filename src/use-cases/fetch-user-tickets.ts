@@ -5,6 +5,7 @@ import { TicketsRepository } from '@/repositories/tickets-repository'
 
 interface FetchUserTicketsRequest {
 	user_id: string
+	query?: string
 	page: number
 }
 
@@ -20,6 +21,7 @@ export class FetchUserTicketsUseCase {
 
 	async execute({
 		user_id,
+		query,
 		page
 	}: FetchUserTicketsRequest): Promise<FetchUserTicketsResponse> {
 		const userExists = await this.usersRepository.findUserById(user_id)
