@@ -55,6 +55,18 @@ describe('Create Ticket', () => {
 			enterprise_id: 'enterprise-01'
 		})
 
+		const technician = await usersRepository.create({
+			name: 'César',
+			email: 'truvejano@minoxidil.com',
+			username: 'pmc.cesar',
+			password_hash: await hash('123456', 6),
+			role: 'TECHNICIAN',
+			department_id: department.id,
+			enterprise_id: 'enterprise-01'
+		})
+
+		console.log(technician)
+
 		const category = await categoriesRepository.create({
 			name: 'Teste'
 		})
@@ -66,7 +78,8 @@ describe('Create Ticket', () => {
 			category_id: category.id,
 			enterprise_id: enterprise.id,
 			department_id: department.id,
-			user_id: user.id
+			user_id: user.id,
+			technician_id: technician.id
 		})
 
 		expect(ticket.id).toEqual(expect.any(Number))
@@ -97,7 +110,8 @@ describe('Create Ticket', () => {
 				priority: 'HIGH',
 				enterprise_id: enterprise.id,
 				department_id: department.id,
-				user_id: 'user.id'
+				user_id: 'user.id',
+				technician_id: 's'
 			})
 		).rejects.instanceOf(NotFoundUserError)
 	})
@@ -116,6 +130,16 @@ describe('Create Ticket', () => {
 			enterprise_id: 'enterprise-01'
 		})
 
+		const technician = await usersRepository.create({
+			name: 'César',
+			email: 'truvejano@minoxidil.com',
+			username: 'pmc.cesar',
+			password_hash: await hash('123456', 6),
+			role: 'TECHNICIAN',
+			department_id: department.id,
+			enterprise_id: 'enterprise-01'
+		})
+
 		const category = await categoriesRepository.create({
 			name: 'Teste'
 		})
@@ -128,7 +152,8 @@ describe('Create Ticket', () => {
 				priority: 'HIGH',
 				enterprise_id: 'enterprise.id',
 				department_id: department.id,
-				user_id: user.id
+				user_id: user.id,
+				technician_id: technician.id
 			})
 		).rejects.instanceOf(NotFoundEnterpriseError)
 	})
@@ -143,6 +168,16 @@ describe('Create Ticket', () => {
 			email: 'truvejano@minoxidil.com',
 			username: 'pmc.cesar',
 			password_hash: await hash('123456', 6),
+			department_id: department.id,
+			enterprise_id: 'enterprise-01'
+		})
+
+		const technician = await usersRepository.create({
+			name: 'César',
+			email: 'truvejano@minoxidil.com',
+			username: 'pmc.cesar',
+			password_hash: await hash('123456', 6),
+			role: 'TECHNICIAN',
 			department_id: department.id,
 			enterprise_id: 'enterprise-01'
 		})
@@ -162,7 +197,8 @@ describe('Create Ticket', () => {
 				priority: 'HIGH',
 				enterprise_id: enterprise.id,
 				department_id: department.id,
-				user_id: user.id
+				user_id: user.id,
+				technician_id: technician.id
 			})
 		).rejects.instanceOf(NotFoundCategoryError)
 	})
@@ -173,6 +209,16 @@ describe('Create Ticket', () => {
 			email: 'truvejano@minoxidil.com',
 			username: 'pmc.cesar',
 			password_hash: await hash('123456', 6),
+			department_id: 'department.id',
+			enterprise_id: 'enterprise-01'
+		})
+
+		const technician = await usersRepository.create({
+			name: 'César',
+			email: 'truvejano@minoxidil.com',
+			username: 'pmc.cesar',
+			password_hash: await hash('123456', 6),
+			role: 'TECHNICIAN',
 			department_id: 'department.id',
 			enterprise_id: 'enterprise-01'
 		})
@@ -196,7 +242,8 @@ describe('Create Ticket', () => {
 				priority: 'HIGH',
 				enterprise_id: enterprise.id,
 				department_id: 'department.id',
-				user_id: user.id
+				user_id: user.id,
+				technician_id: technician.id
 			})
 		).rejects.instanceOf(NotFoundDepartmentError)
 	})

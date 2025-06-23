@@ -62,9 +62,10 @@ model User {
     isActive      Boolean  @default(true)
     created_at    DateTime @default(now())
 
-    department Department @relation(fields: [department_id], references: [id])
-    enterprise Enterprise @relation(fields: [enterprise_id], references: [id])
-    Ticket     Ticket[]
+    department        Department @relation(fields: [department_id], references: [id])
+    enterprise        Enterprise @relation(fields: [enterprise_id], references: [id])
+    userTickets       Ticket[]   @relation("UserTickets")
+    technicianTickets Ticket[]   @relation("TechnicianTickets")
 
     @@map("users")
 }
@@ -80,6 +81,7 @@ model Category {
 model Ticket {
     id            Int       @id @default(autoincrement())
     user_id       String
+    technician_id String
     enterprise_id String
     department_id String
     category_id   String
@@ -91,7 +93,8 @@ model Ticket {
     updated_at    DateTime?
 
     enterprise Enterprise @relation(fields: [enterprise_id], references: [id])
-    user       User       @relation(fields: [user_id], references: [id])
+    user       User       @relation("UserTickets", fields: [user_id], references: [id])
+    technician User       @relation("TechnicianTickets", fields: [technician_id], references: [id])
     category   Category   @relation(fields: [category_id], references: [id])
     department Department @relation(fields: [department_id], references: [id])
 

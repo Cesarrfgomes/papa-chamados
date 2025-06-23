@@ -19,7 +19,10 @@ export class InMemoryTicketRepository implements TicketsRepository {
 		page: number
 	): Promise<Ticket[]> {
 		const tickets = this.tickets
-			.filter(item => item.user_id === user_id)
+			.filter(
+				item =>
+					item.user_id === user_id || item.technician_id === user_id
+			)
 			.slice((page - 1) * 20, page * 20)
 
 		return tickets
@@ -33,6 +36,7 @@ export class InMemoryTicketRepository implements TicketsRepository {
 			priority: data.priority ?? 'LOW',
 			status: data.status ?? 'NEW',
 			user_id: data.user_id,
+			technician_id: data.technician_id,
 			enterprise_id: data.enterprise_id,
 			category_id: data.category_id,
 			department_id: data.department_id,
@@ -41,6 +45,18 @@ export class InMemoryTicketRepository implements TicketsRepository {
 		}
 
 		this.tickets.push(ticket)
+
+		return ticket
+	}
+
+	async save(ticket: Ticket): Promise<Ticket> {
+		const ticketInIndex = this.tickets.findIndex(
+			item => item.id === ticket.id
+		)
+
+		if (ticketInIndex >= 0) {
+			this.tickets[ticketInIndex] = ticket
+		}
 
 		return ticket
 	}

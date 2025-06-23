@@ -42,6 +42,16 @@ describe('Fetch User tickets', () => {
 			enterprise_id: enterprise.id
 		})
 
+		const technician = await usersRepository.create({
+			name: 'César',
+			email: 'truvejano@minoxidil.com',
+			username: 'pmc.cesar',
+			password_hash: await hash('123456', 6),
+			role: 'TECHNICIAN',
+			department_id: department.id,
+			enterprise_id: 'enterprise-01'
+		})
+
 		await ticketsRepository.create({
 			title: 'Ticket teste',
 			description: 'Texto do ticket teste',
@@ -49,7 +59,8 @@ describe('Fetch User tickets', () => {
 			priority: 'HIGH',
 			enterprise_id: enterprise.id,
 			department_id: department.id,
-			user_id: user.id
+			user_id: user.id,
+			technician_id: technician.id
 		})
 
 		const { tickets } = await sut.execute({ user_id: user.id, page: 1 })
@@ -78,6 +89,16 @@ describe('Fetch User tickets', () => {
 			department_id: department.id
 		})
 
+		const technician = await usersRepository.create({
+			name: 'César',
+			email: 'truvejano@minoxidil.com',
+			username: 'pmc.cesar',
+			password_hash: await hash('123456', 6),
+			role: 'TECHNICIAN',
+			department_id: department.id,
+			enterprise_id: 'enterprise-01'
+		})
+
 		for (let i = 0; i < 22; i++) {
 			await ticketsRepository.create({
 				title: `Ticket teste ${i}`,
@@ -86,7 +107,8 @@ describe('Fetch User tickets', () => {
 				priority: 'HIGH',
 				enterprise_id: enterprise.id,
 				department_id: department.id,
-				user_id: user.id
+				user_id: user.id,
+				technician_id: technician.id
 			})
 		}
 
