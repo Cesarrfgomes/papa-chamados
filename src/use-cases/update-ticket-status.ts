@@ -1,6 +1,7 @@
 import { Status, Ticket } from '@prisma/client'
 import { TicketsRepository } from '@/repositories/tickets-repository'
 import { NotFoundTicketError } from './errors/ticket-not-found-error'
+import { TickerAlreadyResolvedError } from './errors/ticker-already-resolved-error'
 
 interface UpdateTicketStatusRequest {
 	ticket_id: number
@@ -22,6 +23,10 @@ export class UpdateTicketStatusUseCase {
 
 		if (!ticket) {
 			throw new NotFoundTicketError()
+		}
+
+		if (ticket.status === 'RESOLVED') {
+			throw new TickerAlreadyResolvedError()
 		}
 
 		ticket.status = status
